@@ -1,5 +1,7 @@
 ﻿using HaberApp.Core.Domains;
+using HaberApp.Core.Models;
 using HaberApp.Core.Utils;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
@@ -37,51 +39,51 @@ namespace HaberApp.WebService.CustomAttributes
             var user = context.HttpContext.User;
             var userInRole = user.IsInRole(RoleConstants.RootAdmin);
 
-            //if (user == null || !user.Identity.IsAuthenticated)
-            //{
-            //    context.Result = new ObjectResult(this.responseResult)
-            //    {
-            //        StatusCode = (int)HttpStatusCode.Unauthorized
-            //    };
-            //    return;
-            //}
+            if (user == null || !user.Identity.IsAuthenticated)
+            {
+                context.Result = new ObjectResult(this.responseResult)
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+                return;
+            }
 
 
-            //if (rootAdminRequired && !userInRole)
-            //{
-            //    context.Result = new ObjectResult(this.responseResult)
-            //    {
-            //        StatusCode = (int)HttpStatusCode.Unauthorized
-            //    };
-            //    return;
-            //}
+            if (rootAdminRequired && !userInRole)
+            {
+                context.Result = new ObjectResult(this.responseResult)
+                {
+                    StatusCode = (int)HttpStatusCode.Unauthorized
+                };
+                return;
+            }
 
 
-            //var requiredPermission = method switch
-            //{
-            //    "POST" => Permissions<T>.Create,
-            //    "PUT" => Permissions<T>.Update,
-            //    "DELETE" => Permissions<T>.Delete,
-            //    "GET" => Permissions<T>.Read,
-            //    _ => null
-            //};
+            var requiredPermission = method switch
+            {
+                "POST" => Permissions<T>.Create,
+                "PUT" => Permissions<T>.Update,
+                "DELETE" => Permissions<T>.Delete,
+                "GET" => Permissions<T>.Read,
+                _ => null
+            };
 
-            //var isEnabled = requiredPermission is null ||
-            //    user.HasClaim("permission", requiredPermission!);
+            var isEnabled = requiredPermission is null ||
+                user.HasClaim("permission", requiredPermission!);
 
 
-            //if (!isEnabled)
-            //{
-            //    this.responseResult?.Errors?.Clear();
-            //    this.responseResult?.Errors?.Add("error", "Forbidden");
-            //    this.responseResult?.StatusCode = HttpStatusCode.Forbidden;
-            //    context.Result = new ObjectResult(this.responseResult)
-            //    {
-            //        StatusCode = (int)HttpStatusCode.Forbidden,
-            //    };
-            //    return;
-            //}
-            return;
+            if (!isEnabled)
+            {
+                this.responseResult?.Errors?.Clear();
+                this.responseResult?.Errors?.Add("error", "Forbidden");
+                this.responseResult?.StatusCode = HttpStatusCode.Forbidden;
+                context.Result = new ObjectResult(this.responseResult)
+                {
+                    StatusCode = (int)HttpStatusCode.Forbidden,
+                };
+                return;
+            }
+
         }
     }
 }
