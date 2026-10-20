@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="HaberApp.Core/HaberApp.Core.csproj" />
+  <Project Path="HaberApp.DataAccess/HaberApp.DataAccess.csproj" Id="d16c11d5-16b7-4b91-8759-a3471131ed0b" />
+  <Project Path="HaberApp.Services/HaberApp.Services.csproj" Id="b984d5f3-e1c0-405d-a067-cd51bf12e9e5" />
+  <Project Path="HaberApp.WebService/HaberApp.WebService.csproj" Id="3808c2a0-6888-44b2-b8c0-32f29105d4ad" />
+</Solution>
