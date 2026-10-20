@@ -1,5 +1,4 @@
 ﻿using HaberApp.Core.Domains;
-using HaberApp.Core.Helpers;
 using HaberApp.Core.Repositories;
 using HaberApp.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +13,10 @@ namespace HaberApp.DataAccess.Repositories
         protected readonly DbSet<T> dbSet;
         protected readonly AppDbContext appDbContext;
 
-        public RepositoryBase()
+        public RepositoryBase(AppDbContext appDbContext)
         {
-            this.appDbContext = ServiceProviderHelper.GetRequiredService<AppDbContext>(); ;
+            this.appDbContext = appDbContext;
             this.dbSet = this.appDbContext.Set<T>();
-
         }
 
         public virtual async Task<IQueryable<T>> AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default)
@@ -74,7 +72,7 @@ namespace HaberApp.DataAccess.Repositories
 
         public virtual async Task<T?> FindFirstByFilterAsyc(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
         {
-            return await this.dbSet.Where(predicate).AsNoTracking().SingleOrDefaultAsync(cancellationToken);
+            return await this.dbSet.Where(predicate).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
         }
 
         public IQueryable<T> GetAllAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)

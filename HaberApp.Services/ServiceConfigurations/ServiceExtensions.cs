@@ -38,8 +38,25 @@ namespace HaberApp.Services.ServiceConfigurations
                 services.AddScoped<ICategoryNewsUrlService, CategoryNewsUrlService>();
                 services.AddScoped<IArticlesService, ArticleService>();
                 services.AddScoped<IAuthService, AuthService>();
+                services.AddScoped<IArticleImportService, ArticleImportService>();
+
+                services.AddHttpClient<InsaatDunyasiService>(ConfigureCrawlerClient);
+                services.AddHttpClient<YapiComTrService>(ConfigureCrawlerClient);
+                services.AddHttpClient<YapiGundemService>(ConfigureCrawlerClient);
+                services.AddHttpClient<ICloudflareImageService, CloudflareImageService>(client =>
+                {
+                    client.Timeout = TimeSpan.FromSeconds(90);
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; HaberAppCrawler/1.0)");
+                });
 
                 return services;
+            }
+
+            private static void ConfigureCrawlerClient(HttpClient client)
+            {
+                client.Timeout = TimeSpan.FromSeconds(30);
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (compatible; HaberAppCrawler/1.0)");
+                client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("tr-TR,tr;q=0.9");
             }
             public IServiceCollection RegisterCloudFlareSettings(IConfiguration configuration)
             {

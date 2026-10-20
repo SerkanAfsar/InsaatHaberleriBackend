@@ -1,19 +1,36 @@
-﻿using HaberApp.Core.Abstract;
+using System.Text.RegularExpressions;
 using HaberApp.Core.Domains;
 using HaberApp.Core.Enums;
 
 namespace HaberApp.Core.Services
 {
-    public class InsaatDunyasiService : ISiteCategoryCrawler
+    // Sınıf adı mevcut mimariyle uyumlu; kaynak site İnşaat Deryası'dır.
+    public class InsaatDunyasiService(HttpClient httpClient)
+        : SiteCrawlerBase(httpClient, NewsSites.InsaatDeryasi, "insaatderyasi.com")
     {
-        public Task<Article> CreateArticleDetail(string url, NewsSites newsSite)
+        private static readonly Regex ArticlePath = new(@"-\d+h\.htm$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        public override async Task<List<string>> GetNewsUrlList(string newsCategoryUrl, NewsSites newsSite)
         {
-            throw new NotImplementedException();
+            var (document, uri) = await LoadAsync(newsCategoryUrl, newsSite);
+            return GetLinks(document, uri,
+                "//div[contains(concat(' ', normalize-space(@class), ' '), ' page-content ')]" +
+                "//div[contains(concat(' ', normalize-space(@class), ' '), ' box-news ')]" +
+                "//a[contains(concat(' ', normalize-space(@class), ' '), ' c ')]",
+                link => ArticlePath.IsMatch(link.AbsolutePath));
         }
 
-        public Task<List<string>> GetNewsUrlList(string newsCategoryUrl, NewsSites newsSite)
+        public override async Task<Article> CreateArticleDetail(string url, NewsSites newsSite)
         {
-            throw new NotImplementedException();
+            var (document, uri) = await LoadAsync(url, newsSite);
+            var title = FirstText(document, "//h1[contains(@class, 'content-title')]");
+            var subtitle = FirstText(document, "//h2[contains(@class, 'content-description')]");
+            var body = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', normalize-space(@class), ' '), ' text-content ')]");
+            var article = ArticleFrom(title, subtitle, CleanContent(body, uri));
+            article.SourceImageUrl = FirstImageUrl(document, uri,
+                "//div[contains(concat(' ', normalize-space(@class), ' '), ' imgc ')]/img",
+                "//meta[@property='og:image']");
+            return article;
         }
     }
 }

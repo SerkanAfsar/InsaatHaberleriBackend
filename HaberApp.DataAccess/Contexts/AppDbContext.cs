@@ -1,24 +1,27 @@
 using HaberApp.Core.Abstract;
 using HaberApp.Core.Domains;
-using HaberApp.Core.Helpers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace HaberApp.DataAccess.Contexts
 {
     public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
         private readonly IConfiguration configuration;
+        private readonly IHttpContextAccessor? httpContextAccessor;
 
         public AppDbContext()
         {
 
         }
-        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options, IConfiguration configuration, IHttpContextAccessor? httpContextAccessor = null) : base(options)
         {
             this.configuration = configuration;
+            this.httpContextAccessor = httpContextAccessor;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,14 +40,15 @@ namespace HaberApp.DataAccess.Contexts
         public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
-            var userId = ContextHelpers.CurrentUserId!;
+            var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             foreach (var entry in entries)
             {
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.CreatedById = userId;
+                    entry.Entity.CreatedById = userId ??
+                        (string.IsNullOrWhiteSpace(entry.Entity.CreatedById) ? "system" : entry.Entity.CreatedById);
                 }
 
                 if (entry.State == EntityState.Modified)
@@ -52,7 +56,8 @@ namespace HaberApp.DataAccess.Contexts
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
                     entry.Property(a => a.CreatedAt).IsModified = false;
                     entry.Property(a => a.CreatedById).IsModified = false;
-                    entry.Entity.UpdatedById = userId;
+                    entry.Entity.UpdatedById = userId ??
+                        (string.IsNullOrWhiteSpace(entry.Entity.UpdatedById) ? "system" : entry.Entity.UpdatedById);
                     //entry.Property(a => a.AddedById).IsModified = false;
                     //entry.Entity.UpdatedById = userId;
                 }

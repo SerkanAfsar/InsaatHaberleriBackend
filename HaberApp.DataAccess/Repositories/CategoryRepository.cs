@@ -1,9 +1,10 @@
 ﻿using HaberApp.Core.Domains;
 using HaberApp.Core.Repositories;
+using HaberApp.DataAccess.Contexts;
 
 namespace HaberApp.DataAccess.Repositories
 {
-    public class CategoryRepository : RepositoryBase<Category>, ICategoryRepository
+    public class CategoryRepository(AppDbContext appDbContext) : RepositoryBase<Category>(appDbContext), ICategoryRepository
     {
     }
 }

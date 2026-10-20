@@ -17,7 +17,8 @@ namespace HaberApp.Services.Validations
                 .Must(a => !string.IsNullOrEmpty(a)).WithMessage("Kategori Adını Giriniz")
                 .MustAsync(async (ctx, categoryName, token) =>
                 {
-                    var exists = await this.categoryRepository.FindFirstByFilterAsyc(a => a.CategoryName.ToLowerInvariant() == categoryName.ToLowerInvariant() && a.Id != ctx.id, token);
+                    var normalizedName = categoryName.ToLowerInvariant();
+                    var exists = await this.categoryRepository.FindFirstByFilterAsyc(a => a.CategoryName.ToLower() == normalizedName && a.Id != ctx.id, token);
                     return exists == null;
                 }).WithMessage("Bu Kategori Adında Kayıtlı Kategori Bulunmaktadır");
 

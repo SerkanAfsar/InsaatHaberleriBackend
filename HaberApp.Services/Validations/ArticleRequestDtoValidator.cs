@@ -19,7 +19,8 @@ namespace HaberApp.Services.Validations
                 .Must(a => !string.IsNullOrEmpty(a)).WithMessage("Haber Başlığı Giriniz")
                 .MustAsync(async (ctx, value, token) =>
                 {
-                    var result = await this.articleRepository.FindFirstByFilterAsyc(a => a.CategoryId == ctx.CategoryId && a.Title.ToLowerInvariant() == value.ToLowerInvariant(), token);
+                    var normalizedTitle = value.ToLowerInvariant();
+                    var result = await this.articleRepository.FindFirstByFilterAsyc(a => a.CategoryId == ctx.CategoryId && a.Title.ToLower() == normalizedTitle, token);
                     return result == null;
 
                 }).WithMessage("Bu Kategoride Bu Haber Zaten Kayıtlı");
@@ -33,15 +34,6 @@ namespace HaberApp.Services.Validations
                     return exists != null;
                 }).WithMessage("Kategori Kayıtlı Değil");
 
-
-            RuleFor(a => a.Title).Cascade(CascadeMode.Stop)
-              .Must(a => !string.IsNullOrEmpty(a)).WithMessage("Haber Başlığı Giriniz")
-              .MustAsync(async (ctx, value, token) =>
-              {
-                  var result = await this.articleRepository.FindFirstByFilterAsyc(a => a.CategoryId == ctx.CategoryId && a.Title.ToLowerInvariant() == value.ToLowerInvariant(), token);
-                  return result == null;
-
-              }).WithMessage("Bu Kategoride Bu Haber Zaten Kayıtlı");
 
             RuleFor(a => a.SubTitle).Must(a => !string.IsNullOrEmpty(a)).WithMessage("Sub Title Giriniz");
 
