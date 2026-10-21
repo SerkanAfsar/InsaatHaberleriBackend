@@ -1,5 +1,5 @@
 ﻿namespace HaberApp.Core.DTOs.Base
 {
-    public record BaseResponseDto();
+    public record BaseResponseDto(int? Id = null);
 
 }

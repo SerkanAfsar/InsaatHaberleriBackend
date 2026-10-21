@@ -2,5 +2,5 @@
 
 namespace HaberApp.Core.DTOs.Article
 {
-    public record ArticleResponseDto() : BaseResponseDto();
+    public record ArticleResponseDto(int? Id) : BaseResponseDto(Id);
 }
