@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Http;
 namespace HaberApp.Core.DTOs.Article
 {
     public record ArticleRequestDto(string Title,
-        string SubTitle,
+        string SubDescription,
         string Content,
         IFormFile ImageFile,
         string SeoTitle,
         string SeoDescription,
         int CategoryId,
-        NewsSites newsSite
+        NewsSites newsSite,
+        string? ImageId = null
         ) : BaseRequestDto();
 
 }

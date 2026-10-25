@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HaberApp.Core.Domains;
 using HaberApp.Core.DTOs.Article;
+using HaberApp.Core.DTOs.AppUser;
 using HaberApp.Core.DTOs.Category;
 using HaberApp.Core.DTOs.CategoryNewsUrl;
 
@@ -18,6 +19,10 @@ namespace HaberApp.Services.Mappers
 
             CreateMap<ArticleRequestDto, Article>();
             CreateMap<Article, ArticleResponseDto>();
+
+            CreateMap<AppUser, AppUserResponseDto>()
+                .ForCtorParam(nameof(AppUserResponseDto.UserId), options => options.MapFrom(user => user.Id))
+                .ForMember(response => response.Id, options => options.Ignore());
         }
     }
 }

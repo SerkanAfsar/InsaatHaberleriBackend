@@ -35,7 +35,7 @@ namespace HaberApp.Services.Validations
                 }).WithMessage("Kategori Kayıtlı Değil");
 
 
-            RuleFor(a => a.SubTitle).Must(a => !string.IsNullOrEmpty(a)).WithMessage("Sub Title Giriniz");
+            RuleFor(a => a.SubDescription).Must(a => !string.IsNullOrEmpty(a)).WithMessage("Sub Description Giriniz");
 
             RuleFor(a => a.Content).Must(a => !string.IsNullOrEmpty(a)).WithMessage("İçerik Giriniz");
 

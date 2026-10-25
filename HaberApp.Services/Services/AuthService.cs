@@ -283,6 +283,7 @@ namespace HaberApp.Services.Services
                 UserName = requestDto.EMail,
                 Name = requestDto.Name,
                 Surname = requestDto.Surname,
+                PictureUrl = requestDto.PictureUrl,
 
             };
 
@@ -312,7 +313,7 @@ namespace HaberApp.Services.Services
 
             return new()
             {
-                Entity = new AppUserResponseDto(user.Name, user.Surname),
+                Entity = new AppUserResponseDto(user.Name, user.Surname, user.Id, user.Email, user.PictureUrl),
 
             };
 
