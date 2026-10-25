@@ -9,7 +9,8 @@ namespace HaberApp.Core.DTOs.AppUser
         string Surname,
         int CityId,
         int DistrictId,
-        List<string> RoleIds
+        List<string> RoleIds,
+        string? PictureUrl = null
         ) : BaseRequestDto()
     {
 

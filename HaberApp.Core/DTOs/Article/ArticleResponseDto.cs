@@ -8,7 +8,7 @@ namespace HaberApp.Core.DTOs.Article
         string Content,
         string SeoTitle,
         string SeoDescription,
-        string ImageId,
+        string? ImageId,
         int CategoryId
         ) : BaseResponseDto(Id);
 }

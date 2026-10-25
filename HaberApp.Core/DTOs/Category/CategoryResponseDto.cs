@@ -7,6 +7,7 @@ namespace HaberApp.Core.DTOs.Category
     public record CategoryResponseDto(int? Id,
         string CategoryName,
         string SeoTitle,
-        string SeoDescription
+        string SeoDescription,
+        int Queue
         ) : BaseResponseDto(Id);
 }
