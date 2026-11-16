@@ -33,7 +33,7 @@ namespace HaberApp.Core.Services
                 ?? document.DocumentNode.SelectSingleNode("//article//*[contains(@class, 'content')]")
                 ?? document.DocumentNode.SelectSingleNode("//article");
 
-            var article = ArticleFrom(title, subtitle, CleanContent(body, uri));
+            var article = ArticleFrom(title, subtitle, CleanContent(body, uri), uri);
             article.SourceImageUrl = FirstImageUrl(document, uri,
                 "//meta[@property='og:image']",
                 "//article//img[contains(@class, 'featured') or contains(@class, 'cover')]",

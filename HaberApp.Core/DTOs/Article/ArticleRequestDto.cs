@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace HaberApp.Core.DTOs.Article
 {
-    public record ArticleRequestDto(string Title,
+    public sealed record ArticleRequestDto(int? Id,
+        string Title,
         string SubDescription,
         string Content,
         IFormFile ImageFile,
@@ -12,7 +13,8 @@ namespace HaberApp.Core.DTOs.Article
         string SeoDescription,
         int CategoryId,
         NewsSites newsSite,
-        string? ImageId = null
+        string? ImageId = null,
+        string? SourceUrl = null
         ) : BaseRequestDto();
 
 }

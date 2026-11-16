@@ -98,7 +98,7 @@ namespace HaberApp.Core.Services
             return null;
         }
 
-        protected static Article ArticleFrom(string title, string subtitle, string content)
+        protected static Article ArticleFrom(string title, string subtitle, string content, Uri pageUri)
         {
             if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
                 throw new InvalidDataException("Haber başlığı veya içeriği kaynak sayfada bulunamadı.");
@@ -109,7 +109,8 @@ namespace HaberApp.Core.Services
                 SubDescription = subtitle,
                 Content = content,
                 SeoTitle = title,
-                SeoDescription = subtitle
+                SeoDescription = subtitle,
+                SourceUrl = pageUri.AbsoluteUri
             };
         }
 

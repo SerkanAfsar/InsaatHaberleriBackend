@@ -1,7 +1,10 @@
 ﻿using FluentValidation;
+using HaberApp.Core.DTOs.AppUser;
 using HaberApp.Core.DTOs.Article;
 using HaberApp.Core.DTOs.Category;
 using HaberApp.Core.DTOs.CategoryNewsUrl;
+using HaberApp.Core.DTOs.Message;
+using HaberApp.Core.DTOs.Others;
 using HaberApp.Core.Models;
 using HaberApp.Core.Services;
 using HaberApp.Services.Mappers;
@@ -39,6 +42,10 @@ namespace HaberApp.Services.ServiceConfigurations
                 services.AddScoped<IArticlesService, ArticleService>();
                 services.AddScoped<IAuthService, AuthService>();
                 services.AddScoped<IArticleImportService, ArticleImportService>();
+                services.AddScoped<IRoleService, RolesService>();
+                services.AddScoped<IUserService, UserService>();
+                services.AddScoped<IMessageService, MessageService>();
+                services.AddTransient<IClaudFlareService, ClaudFlareService>();
 
                 services.AddHttpClient<InsaatDunyasiService>(ConfigureCrawlerClient);
                 services.AddHttpClient<YapiComTrService>(ConfigureCrawlerClient);
@@ -76,6 +83,10 @@ namespace HaberApp.Services.ServiceConfigurations
                 services.AddScoped<IValidator<ArticleRequestDto>, ArticleRequestDtoValidator>();
                 services.AddScoped<IValidator<CategoryRequestDto>, CategoryRequestDtoValidator>();
                 services.AddScoped<IValidator<CategoryNewsUrlRequestDto>, CategoryNewsUrlRequestDtoValidator>();
+                services.AddScoped<IValidator<LoginRequestDto>, LoginRequestDtoValidator>();
+                services.AddScoped<IValidator<RoleRequestDto>, AppRoleRequestDtoValidator>();
+                services.AddScoped<IValidator<AppUserRequestDto>, AppUserRequestDtoValidator>();
+                services.AddScoped<IValidator<MessageRequestDto>, MessageRequestDtoValidator>();
 
                 return services;
             }

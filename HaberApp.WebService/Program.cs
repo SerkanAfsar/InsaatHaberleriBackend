@@ -1,14 +1,14 @@
-using Hangfire;
-using Hangfire.Dashboard;
-using Hangfire.SqlServer;
-using HaberApp.WebService.Jobs;
 using HaberApp.Core.Helpers;
 using HaberApp.DataAccess.Configurations;
 using HaberApp.Services.ServiceConfigurations;
 using HaberApp.WebService.Configurations;
 using HaberApp.WebService.CustomAttributes;
 using HaberApp.WebService.CustomMiddlewares;
+using HaberApp.WebService.Jobs;
 using HaberApp.WebService.Middlewares;
+using Hangfire;
+using Hangfire.Dashboard;
+using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,9 +24,7 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions((opt) =>
         System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
-
-
-
+builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
 builder.Services.RegisterDbContext(builder.Configuration);
 builder.Services.RegisterRepositories();

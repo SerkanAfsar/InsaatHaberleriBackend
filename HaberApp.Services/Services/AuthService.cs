@@ -31,6 +31,7 @@ namespace HaberApp.Services.Services
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IMapper mapper;
         private readonly RoleManager<AppRole> roleManager;
+        private readonly IClaudFlareService claudFlareService;
 
         public AuthService(IRepositoryBase<UserRefreshToken> repository,
          IUnitOfWork unitOfWork,
@@ -39,7 +40,8 @@ namespace HaberApp.Services.Services
          IHttpContextAccessor httpContextAccessor = null,
          IMapper mapper = null,
 
-         RoleManager<AppRole> roleManager = null)
+         RoleManager<AppRole> roleManager = null,
+         IClaudFlareService claudFlareService = null)
         {
             this.refreshTokenRepository = repository;
             this.unitOfWork = unitOfWork;
@@ -49,6 +51,7 @@ namespace HaberApp.Services.Services
             this.httpContextAccessor = httpContextAccessor;
             this.mapper = mapper;
             this.roleManager = roleManager;
+            this.claudFlareService = claudFlareService;
         }
 
         public async Task<ResponseResult<TokenResponseDto>> CreateTokenAsync(LoginRequestDto loginDto, CancellationToken cancellationToken = default)
@@ -57,6 +60,8 @@ namespace HaberApp.Services.Services
             {
                 throw new ArgumentNullException(nameof(loginDto));
             }
+
+            await this.claudFlareService.ValidateToken(loginDto.Token, cancellationToken);
 
             var user = await userManager.FindByEmailAsync(loginDto.EMail);
             if (user == null)
@@ -272,7 +277,7 @@ namespace HaberApp.Services.Services
                 throw new CustomException("error", "Root Admin Rolü Tanımlayınız");
             }
 
-            if (requestDto.RoleIds.Contains(rootAdminRoleId))
+            if (requestDto.Roles.Contains(rootAdminRoleId))
             {
                 throw new CustomException("error", "Root Admin Rolünde Yanlızca Bir Adet Kullanıcı Olabilir");
             }
@@ -294,7 +299,7 @@ namespace HaberApp.Services.Services
                 throw new CustomException(error.Code, error.Description);
             }
             var roleNameList = new List<string>();
-            foreach (var roleId in requestDto.RoleIds)
+            foreach (var roleId in requestDto.Roles)
             {
                 var role = await roleManager.FindByIdAsync(roleId);
                 if (role is not null)

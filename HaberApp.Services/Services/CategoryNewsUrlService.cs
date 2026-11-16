@@ -6,5 +6,6 @@ namespace HaberApp.Services.Services
 {
     public class CategoryNewsUrlService : ServiceBase<CategoryNewsUrlRequestDto, CategoryNewsUrl, CategoryNewsUrlResponseDto>, ICategoryNewsUrlService
     {
+
     }
 }

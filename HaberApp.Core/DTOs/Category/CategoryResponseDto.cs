@@ -1,13 +1,14 @@
-﻿using HaberApp.Core.DTOs.Base;
+﻿using HaberApp.Core.DTOs.Article;
+using HaberApp.Core.DTOs.Base;
 
 namespace HaberApp.Core.DTOs.Category
 {
-
-
-    public record CategoryResponseDto(int? Id,
+    public sealed record CategoryResponseDto(int? Id,
         string CategoryName,
         string SeoTitle,
         string SeoDescription,
-        int Queue
+        int Queue,
+        List<ArticleResponseDto>? SubArticles = null!,
+        int? NewsCount = null
         ) : BaseResponseDto(Id);
 }

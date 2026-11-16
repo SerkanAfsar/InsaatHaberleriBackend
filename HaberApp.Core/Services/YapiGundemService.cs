@@ -30,7 +30,7 @@ namespace HaberApp.Core.Services
             var subtitle = lead is not null ? Text(lead) : Meta(document, "description");
             if (lead is not null) lead.Remove();
 
-            var article = ArticleFrom(title, subtitle, CleanContent(body, uri));
+            var article = ArticleFrom(title, subtitle, CleanContent(body, uri), uri);
             article.SourceImageUrl = FirstImageUrl(document, uri,
                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' tdb_single_featured_image ')]//a[@href]",
                 "//meta[@property='og:image']");

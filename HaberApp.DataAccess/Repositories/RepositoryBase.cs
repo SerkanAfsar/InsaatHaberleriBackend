@@ -35,6 +35,7 @@ namespace HaberApp.DataAccess.Repositories
         public virtual async Task<T?> DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             var entity = await this.dbSet.FindAsync(id);
+            this.dbSet.Remove(entity!);
             return entity ?? null;
         }
 
@@ -75,7 +76,7 @@ namespace HaberApp.DataAccess.Repositories
             return await this.dbSet.Where(predicate).AsNoTracking().FirstOrDefaultAsync(cancellationToken);
         }
 
-        public IQueryable<T> GetAllAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)
+        public virtual IQueryable<T> GetAllAsync(Expression<Func<T, bool>>? predicate = null, Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null, CancellationToken cancellationToken = default)
         {
             //throw new NotImplementedException();
 

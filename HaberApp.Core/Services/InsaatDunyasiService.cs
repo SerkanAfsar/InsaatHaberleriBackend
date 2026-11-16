@@ -26,7 +26,7 @@ namespace HaberApp.Core.Services
             var title = FirstText(document, "//h1[contains(@class, 'content-title')]");
             var subtitle = FirstText(document, "//h2[contains(@class, 'content-description')]");
             var body = document.DocumentNode.SelectSingleNode("//div[contains(concat(' ', normalize-space(@class), ' '), ' text-content ')]");
-            var article = ArticleFrom(title, subtitle, CleanContent(body, uri));
+            var article = ArticleFrom(title, subtitle, CleanContent(body, uri), uri);
             article.SourceImageUrl = FirstImageUrl(document, uri,
                 "//div[contains(concat(' ', normalize-space(@class), ' '), ' imgc ')]/img",
                 "//meta[@property='og:image']");

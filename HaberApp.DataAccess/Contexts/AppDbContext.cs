@@ -95,5 +95,7 @@ namespace HaberApp.DataAccess.Contexts
         public DbSet<Category> Categories { get; set; }
         public DbSet<Article> Articles { get; set; }
         public DbSet<CategoryNewsUrl> CategoryNewsUrls { get; set; }
+        public DbSet<UserRefreshToken> RefreshTokens { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }

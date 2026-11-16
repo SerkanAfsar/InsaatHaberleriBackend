@@ -8,5 +8,6 @@ namespace HaberApp.Core.Utils
         public static string NormalUser { get; set; } = nameof(NormalUser);
         public static IReadOnlyCollection<string> RoleList => new ReadOnlyCollection<string>(new[] { RootAdmin, NormalUser });
         public static bool IsInRole(string roleName) => RoleList.Contains(roleName);
+
     }
 }

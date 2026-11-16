@@ -20,7 +20,7 @@ namespace HaberApp.Services.Validations
                 .MustAsync(async (ctx, value, token) =>
                 {
                     var normalizedTitle = value.ToLowerInvariant();
-                    var result = await this.articleRepository.FindFirstByFilterAsyc(a => a.CategoryId == ctx.CategoryId && a.Title.ToLower() == normalizedTitle, token);
+                    var result = await this.articleRepository.FindFirstByFilterAsyc(a => a.CategoryId == ctx.CategoryId && a.Id != ctx.Id && a.Title.ToLower() == normalizedTitle, token);
                     return result == null;
 
                 }).WithMessage("Bu Kategoride Bu Haber Zaten Kayıtlı");

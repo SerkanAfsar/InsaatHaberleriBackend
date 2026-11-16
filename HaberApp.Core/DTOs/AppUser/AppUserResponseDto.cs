@@ -2,10 +2,12 @@
 
 namespace HaberApp.Core.DTOs.AppUser
 {
-    public record AppUserResponseDto(
+    public sealed record AppUserResponseDto(
         string Name,
         string Surname,
         string? UserId = null,
         string? Email = null,
-        string? PictureUrl = null) : BaseResponseDto();
+        string? PictureUrl = null,
+        List<string> Roles = null
+        ) : BaseResponseDto();
 }

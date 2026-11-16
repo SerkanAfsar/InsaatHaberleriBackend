@@ -6,6 +6,7 @@ using HaberApp.Core.Services;
 using HaberApp.Core.UnitOfWorks;
 using HaberApp.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace HaberApp.Services.Services
 {
@@ -17,14 +18,14 @@ namespace HaberApp.Services.Services
         ICloudflareImageService cloudflareImageService,
         InsaatDunyasiService insaatDeryasiService,
         YapiComTrService yapiComTrService,
-        YapiGundemService yapiGundemService) : IArticleImportService
+        YapiGundemService yapiGundemService,
+        ILogger<ArticleImportService> logger) : IArticleImportService
     {
         public async Task<int> ImportNewArticlesAsync(CancellationToken cancellationToken = default)
         {
             var sources = await categoryNewsUrlRepository.GetAllAsync()
                 .OrderBy(source => source.Id)
                 .ToListAsync(cancellationToken);
-            var errors = new List<Exception>();
             var added = 0;
 
             foreach (var source in sources)
@@ -40,7 +41,7 @@ namespace HaberApp.Services.Services
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    errors.Add(new InvalidOperationException($"Kategori kaynak URL'si okunamadı: {source.Url}", ex));
+                    logger.LogError(ex, "Kategori kaynak URL'si okunamadı: {SourceUrl}", source.Url);
                     continue;
                 }
 
@@ -55,7 +56,7 @@ namespace HaberApp.Services.Services
                     }
                     catch (Exception ex) when (ex is not OperationCanceledException)
                     {
-                        errors.Add(new InvalidOperationException($"Haber okunamadı: {url}", ex));
+                        logger.LogError(ex, "Haber okunamadı: {ArticleUrl}", url);
                         continue;
                     }
 
@@ -83,7 +84,7 @@ namespace HaberApp.Services.Services
                             }
                             catch (Exception ex) when (ex is not OperationCanceledException)
                             {
-                                errors.Add(new InvalidOperationException($"Haber görseli yüklenemedi: {url}", ex));
+                                logger.LogError(ex, "Haber görseli yüklenemedi: {ArticleUrl}", url);
                                 continue;
                             }
                         }
@@ -94,6 +95,7 @@ namespace HaberApp.Services.Services
                             if (trackedArticle is null) continue;
                             pendingArticle = trackedArticle;
                             trackedArticle.ImageId = article.ImageId;
+                            trackedArticle.SourceUrl = article.SourceUrl;
                             await unitOfWork.CommitAsync(cancellationToken);
                             continue;
                         }
@@ -108,13 +110,10 @@ namespace HaberApp.Services.Services
                         if (pendingArticle is not null)
                             dbContext.Entry(pendingArticle).State = EntityState.Detached;
 
-                        errors.Add(new InvalidOperationException($"Haber veritabanına kaydedilemedi: {url}", ex));
+                        logger.LogError(ex, "Haber veritabanına kaydedilemedi: {ArticleUrl}. Sıradaki habere geçiliyor.", url);
                     }
                 }
             }
-
-            if (errors.Count > 0)
-                throw new AggregateException($"Haber aktarımı sırasında {errors.Count} hata oluştu. {added} haber kaydedildi.", errors);
 
             return added;
         }

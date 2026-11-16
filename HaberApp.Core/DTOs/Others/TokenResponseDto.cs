@@ -2,7 +2,7 @@
 
 namespace HaberApp.Core.DTOs.Others
 {
-    public record TokenResponseDto(string? AccessToken,
+    public sealed record TokenResponseDto(string? AccessToken,
           DateTime? AccessTokenExpiration,
           string? RefreshToken,
           DateTime? RefreshTokenExpiration) : BaseResponseDto()

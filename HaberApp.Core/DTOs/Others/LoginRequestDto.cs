@@ -2,5 +2,5 @@
 
 namespace HaberApp.Core.DTOs.Others
 {
-    public record LoginRequestDto(string EMail, string Password) : BaseRequestDto();
+    public sealed record LoginRequestDto(string EMail, string Password, string Token) : BaseRequestDto();
 }

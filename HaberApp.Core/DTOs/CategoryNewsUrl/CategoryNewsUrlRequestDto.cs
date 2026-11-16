@@ -8,7 +8,7 @@ namespace HaberApp.Core.DTOs.CategoryNewsUrl
     //public int CategoryId { get; set; }
     //public Category Category { get; set; }
     //public NewsSites NewsSite { get; set; }
-    public record CategoryNewsUrlRequestDto(int? id,
+    public sealed record CategoryNewsUrlRequestDto(int? id,
         string Url,
         int CategoryId,
         NewsSites newsSite

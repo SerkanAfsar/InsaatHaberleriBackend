@@ -29,6 +29,7 @@ namespace HaberApp.DataAccess.Configurations
                 services.AddScoped<ICategoryRepository, CategoryRepository>();
                 services.AddScoped<IArticleRepository, ArticleRepository>();
                 services.AddScoped<ICategoryNewsUrlRepository, CategoryNewsUrlRepository>();
+                services.AddScoped<IMessageRepository, MessageRepository>();
                 services.AddScoped<IUnitOfWork, UnitOfWork>();
 
                 return services;

@@ -8,9 +8,11 @@
         public string SeoTitle { get; set; }
         public string SeoDescription { get; set; }
         public string? ImageId { get; set; } = null!;
+        public string? SourceUrl { get; set; }
         [System.ComponentModel.DataAnnotations.Schema.NotMapped]
         public string? SourceImageUrl { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+        public int ReadedCount { get; set; } = 1;
     }
 }

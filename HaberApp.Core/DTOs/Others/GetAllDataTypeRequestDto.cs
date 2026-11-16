@@ -2,7 +2,7 @@
 
 namespace HaberApp.Core.DTOs.Others
 {
-    public record GetAllDataTypeRequestDto : BaseRequestDto
+    public sealed record GetAllDataTypeRequestDto : BaseRequestDto
     {
         public int Offset { get; set; } = 0;
         public int Count { get; set; } = 10;
@@ -11,5 +11,6 @@ namespace HaberApp.Core.DTOs.Others
         public string? Filters { get; set; } = null;
         public bool DateSort { get; set; } = false;
         public bool? IsEnabled { get; set; } = null!;
+        public int? CategoryId { get; set; } = null!;
     }
 }

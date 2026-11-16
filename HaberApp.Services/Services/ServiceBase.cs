@@ -8,6 +8,7 @@ using HaberApp.Core.Repositories;
 using HaberApp.Core.Services;
 using HaberApp.Core.UnitOfWorks;
 using HaberApp.Core.Utils;
+using HaberApp.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Dynamic.Core;
@@ -26,12 +27,14 @@ namespace HaberApp.Services.Services
         protected readonly IUnitOfWork unitOfWork;
         protected readonly IMapper mapper;
         protected readonly ResponseResult<TResponseDto> responseResult;
+        protected readonly AppDbContext appDbContext;
 
         public ServiceBase()
         {
             this.repository = ServiceProviderHelper.GetRequiredService<IRepositoryBase<TDomain>>() ?? throw new Exception("repository hata");
             this.mapper = ServiceProviderHelper.GetRequiredService<IMapper>() ?? throw new Exception("Mapper Hata");
             this.unitOfWork = ServiceProviderHelper.GetRequiredService<IUnitOfWork>() ?? throw new Exception("Unit Of Work Hata");
+            this.appDbContext = ServiceProviderHelper.GetRequiredService<AppDbContext>() ?? throw new Exception("AppDbContext Hata");
             this.responseResult = new();
         }
 

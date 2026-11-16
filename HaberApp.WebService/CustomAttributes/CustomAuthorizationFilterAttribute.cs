@@ -1,6 +1,7 @@
 ﻿using HaberApp.Core.Domains;
 using HaberApp.Core.Models;
 using HaberApp.Core.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
@@ -35,9 +36,17 @@ namespace HaberApp.WebService.CustomAttributes
             {
                 return;
             }
+
+            var allowAnonymous = context.HttpContext
+                               .GetEndpoint()?
+                               .Metadata
+                               .GetMetadata<IAllowAnonymous>() is not null;
+
+            if (allowAnonymous)
+                return;
             //throw new NotImplementedException();
             var user = context.HttpContext.User;
-            var userInRole = user.IsInRole(RoleConstants.RootAdmin);
+            var userRootAdmin = user.IsInRole(RoleConstants.RootAdmin);
 
             if (user == null || !user.Identity.IsAuthenticated)
             {
@@ -48,15 +57,12 @@ namespace HaberApp.WebService.CustomAttributes
                 return;
             }
 
-
-            if (rootAdminRequired && !userInRole)
+            if (userRootAdmin)
             {
-                context.Result = new ObjectResult(this.responseResult)
-                {
-                    StatusCode = (int)HttpStatusCode.Unauthorized
-                };
                 return;
             }
+
+
 
 
             var requiredPermission = method switch
